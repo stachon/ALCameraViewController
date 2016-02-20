@@ -230,7 +230,21 @@ internal class ConfirmViewController: UIViewController, UIScrollViewDelegate {
             let normalizedWidth = cropRect.width / imageView.frame.width
             let normalizedHeight = cropRect.height / imageView.frame.height
             
-            let normalizedRect = CGRect(x: normalizedX, y: normalizedY, width: normalizedWidth, height: normalizedHeight)
+            var normalizedRect: CGRect!
+          
+            // the rectangle depends on photo orientation
+            switch imageView.image!.imageOrientation {
+            case .Up:
+              normalizedRect = CGRect(x: normalizedX, y: normalizedY, width: normalizedWidth, height: normalizedHeight)
+            case .Down:
+              normalizedRect = CGRect(x: 1-normalizedX-normalizedWidth, y: 1-normalizedY-normalizedHeight, width: normalizedWidth, height: normalizedHeight)
+            case .Left:
+              normalizedRect = CGRect(x: 1-normalizedY-normalizedHeight, y: normalizedX, width: normalizedHeight, height: normalizedWidth)
+            case .Right:
+              normalizedRect = CGRect(x: normalizedY, y: 1-normalizedX-normalizedWidth, width: normalizedHeight, height: normalizedWidth)
+            default:
+              normalizedRect = CGRect(x: normalizedX, y: normalizedY, width: normalizedWidth, height: normalizedHeight)
+            }
             
             fetcher.setCropRect(normalizedRect)
         }
