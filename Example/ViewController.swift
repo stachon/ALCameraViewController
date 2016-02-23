@@ -25,6 +25,9 @@ class ViewController: UIViewController {
             self.imageView.image = image
             self.dismissViewControllerAnimated(true, completion: nil)
         }
+      cameraViewController.createOverlay = {
+        return CircularCropOverlay()
+      }
         
         presentViewController(cameraViewController, animated: true, completion: nil)
     }

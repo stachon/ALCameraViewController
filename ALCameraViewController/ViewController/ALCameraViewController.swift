@@ -47,7 +47,7 @@ public extension ALCameraViewController {
 public class ALCameraViewController: UIViewController {
     
     let cameraView = CameraView()
-    let cameraOverlay = CropOverlay()
+    var cameraOverlay: UIView!
     let cameraButton = UIButton()
     
     let closeButton = UIButton()
@@ -60,7 +60,11 @@ public class ALCameraViewController: UIViewController {
     
     var verticalPadding: CGFloat = 30
     var horizontalPadding: CGFloat = 30
-    
+  
+    var createOverlay: () -> UIView = {
+      return CropOverlay()
+    }
+  
     lazy var volumeView: MPVolumeView = { [unowned self] in
         let view = MPVolumeView()
         view.frame = CGRect(x: 0, y: 0, width: 1, height: 1)
@@ -275,7 +279,9 @@ public class ALCameraViewController: UIViewController {
     }
     
     private func layoutCropView() {
-        
+      
+        cameraOverlay = createOverlay()
+      
         let size = view.frame.size
         let minDimension = size.width < size.height ? size.width : size.height
         let maxDimension = size.width > size.height ? size.width : size.height
@@ -387,6 +393,7 @@ public class ALCameraViewController: UIViewController {
         cameraView.stopSession()
         
         let confirmViewController = ConfirmViewController(asset: asset, allowsCropping: allowCropping)
+        confirmViewController.createOverlay = self.createOverlay
         
         confirmViewController.onComplete = { image in
             if image == nil {

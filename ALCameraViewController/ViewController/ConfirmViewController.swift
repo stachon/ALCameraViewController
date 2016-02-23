@@ -13,7 +13,7 @@ internal class ConfirmViewController: UIViewController, UIScrollViewDelegate {
     
     @IBOutlet weak var scrollView: UIScrollView!
     let imageView = UIImageView()
-    @IBOutlet weak var cropOverlay: CropOverlay!
+    var cropOverlay: UIView!
     @IBOutlet weak var cancelButton: UIButton!
     @IBOutlet weak var confirmButton: UIButton!
     @IBOutlet weak var centeringView: UIView!
@@ -24,7 +24,11 @@ internal class ConfirmViewController: UIViewController, UIScrollViewDelegate {
     var horizontalPadding: CGFloat = 30
     
     var onComplete: ALCameraViewCompletion?
-    
+  
+    var createOverlay: () -> UIView = {
+      return CropOverlay()
+    }
+  
     var asset: PHAsset!
     
     internal init(asset: PHAsset, allowsCropping: Bool) {
@@ -60,7 +64,8 @@ internal class ConfirmViewController: UIViewController, UIScrollViewDelegate {
         scrollView.addSubview(imageView)
         scrollView.delegate = self
         scrollView.maximumZoomScale = 1
-        
+      
+        cropOverlay = createOverlay()
         cropOverlay.hidden = true
         
         guard let asset = asset else {
