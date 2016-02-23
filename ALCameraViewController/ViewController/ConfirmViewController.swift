@@ -67,6 +67,7 @@ internal class ConfirmViewController: UIViewController, UIScrollViewDelegate {
       
         cropOverlay = createOverlay()
         cropOverlay.hidden = true
+        cropOverlay.addConstraint(NSLayoutConstraint(item: cropOverlay, attribute: .Width, relatedBy: .Equal, toItem: cropOverlay, attribute: .Height, multiplier: 1.0, constant: 0))
         
         guard let asset = asset else {
             return
